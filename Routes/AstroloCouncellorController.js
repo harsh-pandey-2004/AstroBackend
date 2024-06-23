@@ -39,17 +39,15 @@ const upload = multer({
 });
 
 const AstrologerController = require("../Controller/AstroloCouncellorController");
-const { registerValidator, loginValidation } = require("../helper/Validation.js");
+// const { registerValidator, loginValidation } = require("../helper/Validation.js");
 
 // Route for astrologer registration
 router.post(
   "/astroCouncelor-register",
-  registerValidator,
   AstrologerController.AstroCouncellorRegister
 );
 router.post(
   "/astroCouncelor-login",
-  loginValidation,
   AstrologerController.AstroCouncellorLogin
 );
 router.post(
