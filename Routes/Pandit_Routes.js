@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const path=require('path');
 router.use(express.json());
-const { registerValidator, loginValidation } = require("../helper/validation.js");
+const { registerValidator, loginValidation } = require("../helper/Validation.js");
 const multer = require("multer");
 
 // Configure Multer storage and file filtering
