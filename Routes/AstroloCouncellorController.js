@@ -39,7 +39,7 @@ const upload = multer({
 });
 
 const AstrologerController = require("../Controller/AstroloCouncellorController");
-const { registerValidator, loginValidation } = require("../helper/validation");
+const { registerValidator, loginValidation } = require("../helper/validation.js");
 
 // Route for astrologer registration
 router.post(
