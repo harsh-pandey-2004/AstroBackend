@@ -7,7 +7,7 @@ const path = require("path");
 
 const userController = require("../Controller/userController");
 
-const { registerValidator, loginValidation } = require("../helper/validation.js");
+const { registerValidator, loginValidation } = require("../helper/Validation.js");
 
 router.post("/register", registerValidator, userController.userRegister);
 router.post("/login", loginValidation, userController.loginUser);
