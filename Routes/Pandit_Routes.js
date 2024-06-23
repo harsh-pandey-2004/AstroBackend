@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const path=require('path');
 router.use(express.json());
-const { registerValidator, loginValidation } = require("../helper/Validation.js");
+// const { registerValidator, loginValidation } = require("../helper/Validation.js");
 const multer = require("multer");
 
 // Configure Multer storage and file filtering
@@ -46,7 +46,6 @@ const upload = multer({
 
 router.post(
   "/pandit-registration",
-  registerValidator,
   panditController.panditRegister
 );
 router.post(
@@ -54,7 +53,7 @@ router.post(
   panditController.BookPanditwithPooja
 );
 router.get("/panditpooja", panditController.getpanditBypooja);
-router.post("/loginpandit", loginValidation, panditController.loginpandit);
+router.post("/loginpandit",panditController.loginpandit);
 router.post(
   "/pandit-otp-verification/:id",
   panditController.otpVerificationPandit
