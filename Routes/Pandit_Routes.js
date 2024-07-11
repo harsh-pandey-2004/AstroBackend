@@ -55,10 +55,10 @@ router.post(
 router.get("/panditpooja", panditController.getpanditBypooja);
 router.post("/loginpandit",panditController.loginpandit);
 router.post(
-  "/pandit-otp-verification/:id",
+  "/pandit-otp-verification/:slug",
   panditController.otpVerificationPandit
 );
 
-router.patch("/update-pandit-profile/:id",upload.single('image'), panditController.updatePandit);
-router.get("/panditdata/:id", panditController.getPanditById);
+router.patch("/update-pandit-profile/:slug",upload.single('image'), panditController.updatePandit);
+router.get("/panditdata/:slug", panditController.getPanditById);
 module.exports = router;

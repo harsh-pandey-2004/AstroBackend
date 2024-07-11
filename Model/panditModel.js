@@ -45,6 +45,11 @@ const PanditSchema = new mongoose.Schema({
   city: {
     type: String,
   },
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   dob: {
     type: String,
   },

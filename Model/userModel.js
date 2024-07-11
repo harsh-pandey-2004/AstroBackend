@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
     otp: {
         type: Number,
     },
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+      },
     is_verified: {
         type: Number,
         default: 0 // 1 when user verified 

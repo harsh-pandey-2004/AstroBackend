@@ -51,11 +51,11 @@ router.post(
   AstrologerController.AstrologerLogin
 );
 router.post(
-  "/astrologer-otp-verification/:id",
+  "/astrologer-otp-verification/:slug",
   AstrologerController.otpVerification
 );
 router.patch(
-  "/update-astrologer-profile/:id",upload.single('image'),
+  "/update-astrologer-profile/:slug",upload.single('image'),
   AstrologerController.updateAstrologer
 );
 router.get("/astrologer-data", AstrologerController.getAstrologer);

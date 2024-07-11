@@ -8,6 +8,27 @@ const generateOTP = () => {
   return Math.floor(1000 + Math.random() * 9000);
 };
 
+const generateSlug = (name, mobile, index = 0) => {
+  const namePart = name.toLowerCase().replace(/\s+/g, "-");
+  const mobilePart = mobile.slice(0, 3);
+  const uniquePart = index > 0 ? `-${index}` : "";
+  return `${namePart}-${mobilePart}${uniquePart}`;
+};
+
+const generateUniqueSlug = async (name, mobile) => {
+  let slug = generateSlug(name, mobile);
+  let existingUser = await User.findOne({ slug });
+  let index = 1;
+
+  while (existingUser) {
+    slug = generateSlug(name, mobile, index);
+    existingUser = await User.findOne({ slug });
+    index++;
+  }
+
+  return slug;
+};
+
 const userRegister = async (req, res) => {
   try {
     const validate = validationResult(req);
@@ -30,7 +51,9 @@ const userRegister = async (req, res) => {
       });
     }
     // Generate a random 4-digit OTP
-    const otp = generateOTP();
+    const otp = generateOTP(); 
+    const slug = await generateUniqueSlug(name, mobile);
+    console.log("Generated slug:", slug);
 
     // Hash the password
     const hashPassword = await bcrypt.hash(password, 10);
@@ -41,6 +64,7 @@ const userRegister = async (req, res) => {
       mobile,
       password: hashPassword,
       otp: otp,
+      slug,
       created_date: new Date().toLocaleDateString("en-GB"), // Set the created_date field to the current date
       created_by: name,
       updated_date: null,
@@ -64,16 +88,16 @@ const userRegister = async (req, res) => {
 };
 const otpVerification = async (req, res) => {
   try {
-    const { id: mobile } = req.params;
+    const { slug: slug } = req.params;
     const otp = req.body;
     const otp1 = otp.otp;
-    if (!mobile) {
+    if (!slug) {
       return res.status(400).json({
         success: false,
-        msg: "mobile is not getting from url",
+        msg: "slug is not getting from url",
       });
     }
-    const userData = await User.findOne({ mobile });
+    const userData = await User.findOne({ slug });
     if (!userData) {
       return res.status(400).json({
         success: false,
@@ -82,9 +106,9 @@ const otpVerification = async (req, res) => {
     }
     if (userData.otp == otp1) {
       // Update the otp field to null
-      await User.updateOne({ mobile }, { $set: { otp: null } });
+      await User.updateOne({ slug }, { $set: { otp: null } });
       // Updating the verified
-      await User.updateOne({ mobile }, { $set: { is_verified: 1 } });
+      await User.updateOne({ slug }, { $set: { is_verified: 1 } });
       return res.status(200).json({
         success: true,
         msg: "OTP verified successfully",
@@ -145,8 +169,8 @@ const loginUser = async (req, res) => {
 
 const getuserData = async (req, res) => {
   try {
-    const user_id = req.params.id;
-    const existingUser = await User.findById(user_id);
+    const slug = req.params.slug; 
+    const existingUser = await User.findOne({ slug });
     if (!existingUser) {
       return res.status(401).send({
         success: false,

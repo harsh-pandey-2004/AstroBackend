@@ -9,18 +9,40 @@ const generateOTP = () => {
   // Generate a random 4-digit OTP
   return Math.floor(1000 + Math.random() * 9000);
 };
+
+const generateSlug = (name, mobile, index = 0) => {
+  const namePart = name.toLowerCase().replace(/\s+/g, "-");
+  const mobilePart = mobile.slice(0, 3);
+  const uniquePart = index > 0 ? `-${index}` : "";
+  return `${namePart}-${mobilePart}${uniquePart}`;
+};
+
+const generateUniqueSlug = async (name, mobile) => {
+  let slug = generateSlug(name, mobile);
+  let existingPandit = await Pandit.findOne({ slug });
+  let index = 1;
+
+  while (existingPandit) {
+    slug = generateSlug(name, mobile, index);
+    existingPandit = await Pandit.findOne({ slug });
+    index++;
+  }
+
+  return slug;
+};
+
 const otpVerificationPandit = async (req, res) => {
   try {
-    const { id: mobile } = req.params;
+    const { slug: slug } = req.params;
     const { otp } = req.body;
     const otp1 = otp;
-    if (!mobile) {
+    if (!slug) {
       return res.status(400).json({
         success: false,
-        msg: "mobile is not getting from url",
+        msg: "slug is not getting from url",
       });
     }
-    const userData = await Pandit.findOne({ mobile });
+    const userData = await Pandit.findOne({ slug });
     if (!userData) {
       return res.status(400).json({
         success: false,
@@ -29,9 +51,9 @@ const otpVerificationPandit = async (req, res) => {
     }
     if (userData.otp == otp1) {
       // Update the otp field to null
-      await Pandit.updateOne({ mobile }, { $set: { otp: null } });
+      await Pandit.updateOne({ slug }, { $set: { otp: null } });
       // Updating the verified
-      await Pandit.updateOne({ mobile }, { $set: { is_verified: 1 } });
+      await Pandit.updateOne({ slug }, { $set: { is_verified: 1 } });
       return res.status(200).json({
         success: true,
         msg: "OTP verified successfully",
@@ -74,6 +96,9 @@ const panditRegister = async (req, res) => {
     // Generate a random 4-digit OTP
     const otp = generateOTP();
 
+    const slug = await generateUniqueSlug(name, mobile);
+    console.log("Generated slug:", slug);
+
     // Hash the password
     const hashPassword = await bcrypt.hash(password, 10);
 
@@ -83,6 +108,7 @@ const panditRegister = async (req, res) => {
       mobile,
       password: hashPassword,
       otp: otp,
+      slug
     });
 
     // Save the new user to the database
@@ -141,13 +167,13 @@ const loginpandit = async (req, res) => {
 };
 const updatePandit = async (req, res) => {
   try {
-    const panditId = req.params.id;
+    const slug = req.params;
     const data  = req.body;
     if (req.file) {
       data.image = req.file.filename;
     }
-    const pandit = await Pandit.findByIdAndUpdate(
-      panditId,data,
+    const pandit = await Pandit.findOneAndUpdate(
+      slug,data,
       { new: true }
     );
     if (!pandit) {
@@ -269,10 +295,10 @@ const BookPanditwithPooja = async (req, res) => {
 
 const getPanditById = async (req, res) => {
   try {
-    const id = req.params.id;
-    console.log(id);
+    const slug = req.params.slug;
+    // console.log(id);
 
-    const pandit = await Pandit.findById(id);
+    const pandit = await Pandit.findOne(slug);
 
     if (!pandit) {
       return res.status(404).json({

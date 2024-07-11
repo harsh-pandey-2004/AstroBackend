@@ -11,8 +11,8 @@ const userController = require("../Controller/userController");
 
 router.post("/register", userController.userRegister);
 router.post("/login", userController.loginUser);
-router.post("/otp-verification/:id", userController.otpVerification);
+router.post("/otp-verification/:slug", userController.otpVerification);
 
-router.get("/userDetails/:id", userController.getuserData);
+router.get("/userDetails/:slug", userController.getuserData);
 
 module.exports = router;

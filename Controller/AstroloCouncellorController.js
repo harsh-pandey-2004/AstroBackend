@@ -85,18 +85,18 @@ const AstroCouncellorRegister = async (req, res) => {
 
 const otpVerification = async (req, res) => {
   try {
-    const { id: mobile } = req.params;
+    const { slug: slug } = req.params;
     const { otp: otp1 } = req.body;
 
-    if (!mobile) {
+    if (!slug) {
       return res.status(400).json({
         success: false,
         msg: "Mobile number is not provided",
       });
     }
 
-    const AstrologerData = await AstroloCouncellor.findOne({ mobile });
-    if (!AstrologerData) {
+    const AstrologerData = await AstroloCouncellor.findOne({ slug });
+    if (!AstrologerData) {  
       return res.status(400).json({
         success: false,
         msg: "Mobile or OTP is incorrect",
@@ -104,7 +104,7 @@ const otpVerification = async (req, res) => {
     }
 
     if (AstrologerData.otp == otp1) {
-      await AstroloCouncellor.updateOne({ mobile }, { $set: { otp: null, is_verified: 1 } });
+      await AstroloCouncellor.updateOne({ slug }, { $set: { otp: null, is_verified: 1 } });
       return res.status(200).json({
         success: true,
         msg: "OTP verified successfully",
@@ -170,12 +170,12 @@ const AstroCouncellorLogin = async (req, res) => {
 
 const updateAstroCouncellor = async (req, res) => {
   try {
-    const AstrologerId = req.params.id;
+    const slug = req.params;
     const updates = req.body;
     if (req.file) {
       updates.image = req.file.filename;
     }
-    const updatedAstrologer = await AstroloCouncellor.findByIdAndUpdate(AstrologerId, updates, { new: true });
+    const updatedAstrologer = await AstroloCouncellor.findOneAndUpdate(slug, updates, { new: true });
 
     if (!updatedAstrologer) {
       return res.status(404).json({ message: "Astrologer not found" });
@@ -200,7 +200,7 @@ const getAstroCouncellor = async (req, res) => {
 
 const getAstroCouncellorProfile = async (req, res) => {
   try {
-    const slug = req.params.slug;
+    const slug = req.params.slug; 
     const AstroData = await AstroloCouncellor.findOne({ slug });
 
     if (!AstroData) {

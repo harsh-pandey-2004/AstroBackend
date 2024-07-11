@@ -82,16 +82,16 @@ const AstrologerRegister = async (req, res) => {
 };
 const otpVerification = async (req, res) => {
     try {
-      const { id: mobile } = req.params;
+      const { slug: slug } = req.params;
       const otp = req.body;
       const otp1 = otp.otp;
-      if (!mobile) {
+      if (!slug) {
         return res.status(400).json({
           success: false,
-          msg: "mobile is not getting from url",
+          msg: "Slug is not getting from url",
         });
       }
-      const AstrologerData = await Astrologer.findOne({ mobile });
+      const AstrologerData = await Astrologer.findOne({ slug });
       if (!AstrologerData) {
         return res.status(400).json({
           success: false,
@@ -100,9 +100,9 @@ const otpVerification = async (req, res) => {
       }
       if (AstrologerData.otp == otp1) {
         // Update the otp field to null
-        await Astrologer.updateOne({ mobile }, { $set: { otp: null } });
+        await Astrologer.updateOne({ slug }, { $set: { otp: null } });
         // Updating the verified
-        await Astrologer.updateOne({ mobile }, { $set: { is_verified: 1 } });
+        await Astrologer.updateOne({ slug }, { $set: { is_verified: 1 } });
         return res.status(200).json({
           success: true,
           msg: "OTP verified successfully",
@@ -161,14 +161,14 @@ const AstrologerLogin = async (req, res) => {
 };
 const updateAstrologer = async (req, res) => {
     try {
-      const AstrologerId = req.params.id;
+      const slug = req.params; 
       const updates = req.body;
       if (req.file) {
         updates.image = req.file.filename;
       }
-      const Astrologerr = await Astrologer.findByIdAndUpdate(AstrologerId, updates, {
+      const Astrologerr = await Astrologer.findOneAndUpdate({ slug: slug }, updates, {
         new: true,
-      });
+    });
       if (!Astrologerr) {
         return res.status(404).json({ message: "Astrologer not found" });
       }
@@ -194,7 +194,7 @@ const getAstrologer=async(req,res)=>{
 }
 const getAstrologerProfile=async(req,res)=>{
     try {
-        const slug=req.params.slug
+        const slug=req.params
         const AstroData= await Astrologer.findOne({slug})
         if(!AstroData){
             return res.status(200).json({
