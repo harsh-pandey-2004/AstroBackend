@@ -82,16 +82,16 @@ const AstrologerRegister = async (req, res) => {
 };
 const otpVerification = async (req, res) => {
     try {
-      const { slug: slug } = req.params;
+      const { id: mobile } = req.params;
       const otp = req.body;
       const otp1 = otp.otp;
-      if (!slug) {
+      if (!mobile) {
         return res.status(400).json({
           success: false,
-          msg: "Slug is not getting from url",
+          msg: "mobile is not getting from url",
         });
       }
-      const AstrologerData = await Astrologer.findOne({ slug });
+      const AstrologerData = await Astrologer.findOne({ mobile });
       if (!AstrologerData) {
         return res.status(400).json({
           success: false,
@@ -100,9 +100,9 @@ const otpVerification = async (req, res) => {
       }
       if (AstrologerData.otp == otp1) {
         // Update the otp field to null
-        await Astrologer.updateOne({ slug }, { $set: { otp: null } });
+        await Astrologer.updateOne({ mobile }, { $set: { otp: null } });
         // Updating the verified
-        await Astrologer.updateOne({ slug }, { $set: { is_verified: 1 } });
+        await Astrologer.updateOne({ mobile }, { $set: { is_verified: 1 } });
         return res.status(200).json({
           success: true,
           msg: "OTP verified successfully",

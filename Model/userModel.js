@@ -17,6 +17,12 @@ const userSchema = new mongoose.Schema({
     otp: {
         type: Number,
     },
+    otpExpiration:{
+        type:Date,
+        default:Date.now,
+        get:(otpExpiration)=>otpExpiration.getTime(),
+        set:(otpExpiration)=>new Date(otpExpiration)
+    },
     slug: {
         type: String,
         required: true,
@@ -57,7 +63,7 @@ const userSchema = new mongoose.Schema({
             type: String,
             
         }
-    }]
+    }],
 });
 
 module.exports = mongoose.model("astrocaptain_user", userSchema);

@@ -33,16 +33,16 @@ const generateUniqueSlug = async (name, mobile) => {
 
 const otpVerificationPandit = async (req, res) => {
   try {
-    const { slug: slug } = req.params;
+    const { id: mobile } = req.params;
     const { otp } = req.body;
     const otp1 = otp;
-    if (!slug) {
+    if (!mobile) {
       return res.status(400).json({
         success: false,
-        msg: "slug is not getting from url",
+        msg: "mobile is not getting from url",
       });
     }
-    const userData = await Pandit.findOne({ slug });
+    const userData = await Pandit.findOne({ mobile });
     if (!userData) {
       return res.status(400).json({
         success: false,
@@ -51,9 +51,9 @@ const otpVerificationPandit = async (req, res) => {
     }
     if (userData.otp == otp1) {
       // Update the otp field to null
-      await Pandit.updateOne({ slug }, { $set: { otp: null } });
+      await Pandit.updateOne({ mobile }, { $set: { otp: null } });
       // Updating the verified
-      await Pandit.updateOne({ slug }, { $set: { is_verified: 1 } });
+      await Pandit.updateOne({ mobile }, { $set: { is_verified: 1 } });
       return res.status(200).json({
         success: true,
         msg: "OTP verified successfully",

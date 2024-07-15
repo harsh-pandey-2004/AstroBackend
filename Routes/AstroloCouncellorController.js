@@ -51,7 +51,7 @@ router.post(
   AstrologerController.AstroCouncellorLogin
 );
 router.post(
-  "/astroCouncelor-otp-verification/:slug",
+  "/astroCouncelor-otp-verification/:id",
   AstrologerController.otpVerification
 );
 router.patch(
