@@ -170,7 +170,7 @@ const AstroCouncellorLogin = async (req, res) => {
 
 const updateAstroCouncellor = async (req, res) => {
   try {
-    const slug = req.params;
+    const {slug} = req.params;
     const updates = req.body;
     if (req.file) {
       updates.image = req.file.filename;
@@ -200,7 +200,7 @@ const getAstroCouncellor = async (req, res) => {
 
 const getAstroCouncellorProfile = async (req, res) => {
   try {
-    const slug = req.params.slug; 
+    const {slug} = req.params; 
     const AstroData = await AstroloCouncellor.findOne({ slug });
 
     if (!AstroData) {

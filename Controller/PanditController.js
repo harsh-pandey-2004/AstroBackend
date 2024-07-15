@@ -167,7 +167,7 @@ const loginpandit = async (req, res) => {
 };
 const updatePandit = async (req, res) => {
   try {
-    const slug = req.params;
+    const {slug} = req.params;
     const data  = req.body;
     if (req.file) {
       data.image = req.file.filename;
@@ -295,10 +295,10 @@ const BookPanditwithPooja = async (req, res) => {
 
 const getPanditById = async (req, res) => {
   try {
-    const slug = req.params.slug;
+    const {slug} = req.params;
     // console.log(id);
 
-    const pandit = await Pandit.findOne(slug);
+    const pandit = await Pandit.findOne({slug});
 
     if (!pandit) {
       return res.status(404).json({

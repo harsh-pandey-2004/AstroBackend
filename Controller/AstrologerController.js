@@ -161,7 +161,7 @@ const AstrologerLogin = async (req, res) => {
 };
 const updateAstrologer = async (req, res) => {
     try {
-      const slug = req.params; 
+      const {slug} = req.params; 
       const updates = req.body;
       if (req.file) {
         updates.image = req.file.filename;
@@ -194,7 +194,7 @@ const getAstrologer=async(req,res)=>{
 }
 const getAstrologerProfile=async(req,res)=>{
     try {
-        const slug=req.params
+        const {slug}=req.params
         const AstroData= await Astrologer.findOne({slug})
         if(!AstroData){
             return res.status(200).json({
