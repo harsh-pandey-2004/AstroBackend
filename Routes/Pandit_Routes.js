@@ -55,7 +55,7 @@ router.post(
 router.get("/panditpooja", panditController.getpanditBypooja);
 router.post("/loginpandit",panditController.loginpandit);
 router.post(
-  "/pandit-otp-verification/:slug",
+  "/pandit-otp-verification/:id",
   panditController.otpVerificationPandit
 );
 

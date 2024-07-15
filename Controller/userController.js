@@ -29,29 +29,100 @@ const generateUniqueSlug = async (name, mobile) => {
   return slug;
 };
 
-const userRegister = async (req, res) => {
-  try {
-    const validate = validationResult(req);
-    if (!validate.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        msg: "Errors",
-        errors: validate.array(),
-      });
-    }
+// const userRegister = async (req, res) => {
+//   try {
+//     const validate = validationResult(req);
+//     if (!validate.isEmpty()) {
+//       return res.status(400).json({
+//         success: false,
+//         msg: "Errors",
+//         errors: validate.array(),
+//       });
+//     }
 
+//     const { name, mobile, password } = req.body;
+
+//     // Check if mobile number already exists
+//     const isExist = await User.findOne({ mobile });
+//     if (isExist) {
+//       return res.status(400).json({
+//         success: false,
+//         msg: "Mobile number already exists",
+//       });
+//     }
+//     // Generate a random 4-digit OTP
+//     // const otp = generateOTP(); 
+//     const slug = await generateUniqueSlug(name, mobile);
+//     console.log("Generated slug:", slug);
+
+//     // Hash the password
+//     const hashPassword = await bcrypt.hash(password, 10);
+
+//     // Create a new user instance
+//     const newUser = new User({
+//       name,
+//       mobile,
+//       password: hashPassword,
+//       // otp: otp,
+//       slug,
+//       created_date: new Date().toLocaleDateString("en-GB"), // Set the created_date field to the current date
+//       created_by: name,
+//       updated_date: null,
+//       updated_by: null,
+//     });
+
+//     // Save the new user to the database
+//     const savedUser = await newUser.save();
+
+//     // return res.status(200).json({
+//     //   success: true,
+//     //   msg: "Registered successfully",
+//     //   user: savedUser,
+//     // });
+//     next();
+//   } catch (error) {
+//     return res.status(400).json({
+//       success: false,
+//       msg: error.message,
+//     });
+//   }
+// };
+// const sendOtp=async(req,res)=>{
+//   try {
+//     const {mobile}=req.body;
+//     // Generate a random 4-digit OTP
+//     const otp = generateOTP(); 
+//     const cDate=new Date();
+//     const isExist = await User.findOneAndUpdate(
+//       { mobile },
+//       {otp, otpExpiration: new Date(cDate.getTime())},
+//       {upsert:true, new:true, setDefaultsOnInsert:true}
+//     );
+//     return res.status(200).json({
+//         success: true,
+//         msg: "Registered successfully and OTP sent",
+//         user: savedUser,
+//       });
+//   } catch (error) {
+//     return res.status(400).json({
+//       success: false,
+//       msg: error.message,
+//     });
+//   }
+// }
+
+const userRegister = async (req, res, next) => {
+  try {
     const { name, mobile, password } = req.body;
 
     // Check if mobile number already exists
-    const isExist = await User.findOne({ mobile });
-    if (isExist) {
-      return res.status(400).json({
-        success: false,
-        msg: "Mobile number already exists",
-      });
+    let user = await User.findOne({ mobile });
+    if (user) {
+      // If user exists, attach the user to the request object and proceed to next middleware
+      req.user = user;
+      return next();
     }
-    // Generate a random 4-digit OTP
-    const otp = generateOTP(); 
+
     const slug = await generateUniqueSlug(name, mobile);
     console.log("Generated slug:", slug);
 
@@ -63,9 +134,8 @@ const userRegister = async (req, res) => {
       name,
       mobile,
       password: hashPassword,
-      otp: otp,
       slug,
-      created_date: new Date().toLocaleDateString("en-GB"), // Set the created_date field to the current date
+      created_date: new Date().toLocaleDateString("en-GB"),
       created_by: name,
       updated_date: null,
       updated_by: null,
@@ -74,10 +144,33 @@ const userRegister = async (req, res) => {
     // Save the new user to the database
     const savedUser = await newUser.save();
 
+    // Attach the saved user to the request object
+    req.user = savedUser;
+
+    // Proceed to the next middleware/controller
+    next();
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      msg: error.message,
+    });
+  }
+};
+
+const sendOtp = async (req, res) => {
+  try {
+    const user = req.user;
+    const otp = generateOTP(); 
+    const cDate = new Date();
+
+    user.otp = otp;
+    user.otpExpiration = new Date(cDate.getTime());
+    const updatedUser = await user.save();
+
     return res.status(200).json({
       success: true,
-      msg: "Registered successfully",
-      user: savedUser,
+      msg: "Registered successfully and OTP sent",
+      user: updatedUser,
     });
   } catch (error) {
     return res.status(400).json({
@@ -86,18 +179,19 @@ const userRegister = async (req, res) => {
     });
   }
 };
+
 const otpVerification = async (req, res) => {
   try {
-    const { slug: slug } = req.params;
+    const { id: mobile } = req.params;
     const otp = req.body;
     const otp1 = otp.otp;
-    if (!slug) {
+    if (!mobile) {
       return res.status(400).json({
         success: false,
         msg: "slug is not getting from url",
       });
     }
-    const userData = await User.findOne({ slug });
+    const userData = await User.findOne({ mobile });
     if (!userData) {
       return res.status(400).json({
         success: false,
@@ -106,9 +200,9 @@ const otpVerification = async (req, res) => {
     }
     if (userData.otp == otp1) {
       // Update the otp field to null
-      await User.updateOne({ slug }, { $set: { otp: null } });
+      await User.updateOne({ mobile }, { $set: { otp: null } });
       // Updating the verified
-      await User.updateOne({ slug }, { $set: { is_verified: 1 } });
+      await User.updateOne({ mobile }, { $set: { is_verified: 1 } });
       return res.status(200).json({
         success: true,
         msg: "OTP verified successfully",
@@ -195,4 +289,5 @@ module.exports = {
   loginUser,
   otpVerification,
   getuserData,
+  sendOtp
 };

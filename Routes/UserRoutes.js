@@ -9,9 +9,9 @@ const userController = require("../Controller/userController");
 
 // const { registerValidator, loginValidation } = require("../helper/Validation.js");
 
-router.post("/register", userController.userRegister);
+router.post("/register", userController.userRegister, userController.sendOtp);
 router.post("/login", userController.loginUser);
-router.post("/otp-verification/:slug", userController.otpVerification);
+router.post("/otp-verification/:id", userController.otpVerification);
 
 router.get("/userDetails/:slug", userController.getuserData);
 
