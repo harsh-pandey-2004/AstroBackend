@@ -170,7 +170,7 @@ const AstroCouncellorLogin = async (req, res) => {
 
 const updateAstroCouncellor = async (req, res) => {
   try {
-    const {slug} = req.params;
+    const {slug} = req.params.slug;
     const updates = req.body;
     if (req.file) {
       updates.image = req.file.filename;
