@@ -7,6 +7,7 @@ const cors = require("cors");
 const server = express();
 const PORT = 3000;
 const apiKey = "AIzaSyBvnHKYalPScRMFLmx-vUsfdLwkRxAyjyw"; // Use environment variable for API key
+server.use(express.json()); // Middleware to parse JSON bodies
 
 server.use(cors());
 server.use(express.json());
@@ -60,11 +61,15 @@ const userRoutes = require("./Routes/UserRoutes");
 const AstrologerRoutes = require("./Routes/AstrologerRoutes");
 const panditRoutes = require("./Routes/Pandit_Routes");
 const AstroCoucellor = require("./Routes/AstroloCouncellorController");
+const VastuRoutes = require("./Routes/VastuRoutes")
+
+
 server.use("/api", userRoutes);
 server.use("/api", AstroCoucellor);
 server.use("/api", poojaDetailsRoutes);
 server.use("/api", AstrologerRoutes);
 server.use("/api", panditRoutes);
+server.use("/api", VastuRoutes);
 
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
