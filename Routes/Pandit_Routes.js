@@ -59,6 +59,6 @@ router.post(
   panditController.otpVerificationPandit
 );
 
-router.patch("/update-pandit-profile/:slug",upload.single('image'), panditController.updatePandit);
+router.patch("/update-pandit-profile/:slug", panditController.updatePandit);
 router.get("/panditdata/:slug", panditController.getPanditById);
 module.exports = router;
