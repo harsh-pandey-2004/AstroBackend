@@ -172,17 +172,17 @@ const updatePandit = async (req, res) => {
     const data  = req;
     console.log(slug)
     console.log(data.body)
-    // if (req.file) {
-    //   data.image = req.file.filename;
-    // }
+    if (req.file) {
+      data.image = req.file.filename;
+    }
     const pandit = await Pandit.findOneAndUpdate(
       slug,data.body,
       { new: true }
     );
     console.log("updated",pandit)
-    // if (!pandit) {
-    //   return res.status(404).json({ message: "User not found" });
-    // }
+    if (!pandit) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     res
       .status(200)
