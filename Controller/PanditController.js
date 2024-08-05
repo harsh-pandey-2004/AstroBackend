@@ -173,7 +173,7 @@ const updatePandit = async (req, res) => {
       data.image = req.file.filename;
     }
     const pandit = await Pandit.findOneAndUpdate(
-      slug,data,
+      {slug:slug},data,
       { new: true }
     );
     if (!pandit) {
@@ -182,7 +182,7 @@ const updatePandit = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Pandit details updated successfully", pandit });
+      .json({ message: "Pandit details updated successfully", padit });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
