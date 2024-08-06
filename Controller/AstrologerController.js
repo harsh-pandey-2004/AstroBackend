@@ -164,7 +164,7 @@ const updateAstrologer = async (req, res) => {
       const {slug} = req.params; 
       const updates = req.body;
       if (req.file) {
-        updates.image = req.file.filename;
+        updates.image = `/astrologer-pics/${req.file.filename}`;
       }
       const Astrologerr = await Astrologer.findOneAndUpdate({ slug: slug }, updates, {
         new: true,
