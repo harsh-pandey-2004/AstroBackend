@@ -62,7 +62,7 @@ const AstrologerRoutes = require("./Routes/AstrologerRoutes");
 const panditRoutes = require("./Routes/Pandit_Routes");
 const AstroCoucellor = require("./Routes/AstroloCouncellorController");
 const VastuRoutes = require("./Routes/VastuRoutes")
-
+const VastuBookRoutes = require("./Routes/VastuBookRoute")
 
 server.use("/api", userRoutes);
 server.use("/api", AstroCoucellor);
@@ -70,6 +70,7 @@ server.use("/api", poojaDetailsRoutes);
 server.use("/api", AstrologerRoutes);
 server.use("/api", panditRoutes);
 server.use("/api", VastuRoutes);
+server.use("/api", VastuBookRoutes);
 
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
