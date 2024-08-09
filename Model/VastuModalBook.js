@@ -46,7 +46,6 @@ const VastuBookingSchema = new mongoose.Schema({
   },
   images: {
     type: [String], // This will store an array of file paths
-    required: true,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
