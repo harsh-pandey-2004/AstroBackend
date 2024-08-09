@@ -3,7 +3,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const axios = require("axios"); // Make sure to require axios
 const cors = require("cors");
-
+const path = require('path');
 const server = express();
 const PORT = 3000;
 const apiKey = "AIzaSyBvnHKYalPScRMFLmx-vUsfdLwkRxAyjyw"; // Use environment variable for API key
@@ -11,7 +11,8 @@ server.use(express.json()); // Middleware to parse JSON bodies
 
 server.use(cors());
 server.use(express.json());
-
+server.use('/astrologer-pics', express.static(path.join(__dirname, 'Astrologer_Profile_Pic')));
+server.use('/astrocounselor-pics', express.static(path.join(__dirname, 'Astrocounselor_Profile_Pic')));
 // Connect to MongoDB
 const connectDB = async () => {
   try {
