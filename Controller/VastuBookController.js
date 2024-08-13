@@ -2,6 +2,7 @@ const Vastu = require("../Model/VastuModalBook");
 
 // Create a Vastu booking
 exports.createVastuBooking = async (req, res) => {
+  console.log(req.body)
   try {
     const vastuBooking = new Vastu(req.body);
     await vastuBooking.save();

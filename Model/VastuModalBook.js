@@ -25,7 +25,7 @@ const VastuBookingSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
-  nearbyStructure: {
+  nearbyStructures: {
     type: String, // This will store the file path as a string
     required: true,
   },
@@ -42,10 +42,10 @@ const VastuBookingSchema = new mongoose.Schema({
   },
   mainDoor: {
     type: String,
-    required: true,
+   
   },
   images: {
-    type: [String], // This will store an array of file paths
+    type: [Object], // This will store an array of file paths
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
