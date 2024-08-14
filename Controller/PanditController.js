@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const Pandit = require("../Model/panditModel");
 const BookingPandit = require("../Model/BookPanditModel");
 const { validationResult } = require("express-validator");

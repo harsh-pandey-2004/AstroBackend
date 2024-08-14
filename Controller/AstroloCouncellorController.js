@@ -1,6 +1,6 @@
 const AstroloCouncellor = require("../Model/AstroCouncellor");
 const { validationResult } = require("express-validator");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // Generating a random 4-digit OTP
 const generateOTP = () => Math.floor(1000 + Math.random() * 9000);

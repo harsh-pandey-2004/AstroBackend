@@ -1,7 +1,7 @@
 const Astrologer=require('../Model/AstroModel');
 const { validationResult } = require("express-validator");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // generating randome otp of 4 digit
 const generateOTP = () => {
