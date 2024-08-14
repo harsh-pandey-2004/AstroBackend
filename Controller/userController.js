@@ -263,7 +263,8 @@ const loginUser = async (req, res) => {
 
 const getuserData = async (req, res) => {
   try {
-    const {slug} = req.params.slug; 
+    const slug = req.params.slug; 
+    console.log(slug)
     const existingUser = await User.findOne({ slug });
     if (!existingUser) {
       return res.status(401).send({
