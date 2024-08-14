@@ -283,11 +283,26 @@ const getuserData = async (req, res) => {
     });
   }
 };
+const UpdateUser=async(req,res)=>{
+  try {
+    const updates = req.body; // Get the data to update from the request body
+    const options = { new: true }; // Return the updated document
+    const user = await User.findByIdAndUpdate(req.params.id, updates, options);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating user', error: error.message });
+  }
+}
 module.exports = {
   userRegister,
   loginUser,
   otpVerification,
   getuserData,
-  sendOtp
+  sendOtp,
+  UpdateUser,
 };
