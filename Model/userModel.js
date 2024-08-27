@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -57,8 +56,8 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0, // 1 when user verified
   },
-  languages:{
-    type:[String]
+  languages: {
+    type: [String],
   },
   created_date: {
     type: String,
