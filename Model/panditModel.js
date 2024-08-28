@@ -6,7 +6,7 @@ const PanditSchema = new mongoose.Schema({
     required: true,
   },
   pincode: {
-    type: Number,
+    type: String
   },
   firstName: {
     type: String,
