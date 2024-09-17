@@ -1,6 +1,9 @@
 const mongoose=require('mongoose');
 
 const MessageReuestSchema=new mongoose.Schema({
+      userName:{
+            type:String
+      },
       userId:{
             type:mongoose.Schema.ObjectId,
             ref:'User',
@@ -23,7 +26,10 @@ const MessageReuestSchema=new mongoose.Schema({
           createdAt: {
             type: Date,
             default: Date.now
-          }
+          },
+      roomId:{
+            type:String,
+      }   
       
 })
 const MessageRequest = mongoose.model('MessageRequest', MessageReuestSchema);
