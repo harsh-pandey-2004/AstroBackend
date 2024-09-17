@@ -345,6 +345,26 @@ const getpanditBypooja = async (req, res) => {
   }
 };
 
+const getPanditByPincodeAndDate = async (req,res)=>{
+  try {
+    const {pincode,availability}=req.body;
+    console.log(pincode,availability);
+    if (!pincode || !availability) {
+      return res.status(400).json({ message: 'Pincode and date are required' });
+    }
+    const pandits = await Pandit.find({
+      pincode,
+      availability: { $elemMatch: { $eq: availability } }
+    });
+    if (pandits.length === 0) {
+      return res.status(404).json({ message: 'No pandits found' });
+    }
+    res.status(200).json(pandits);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 module.exports = {
   loginpandit,
   panditRegister,
@@ -353,4 +373,5 @@ module.exports = {
   BookPanditwithPooja,
   getPanditById,
   updatePandit,
+  getPanditByPincodeAndDate
 };
