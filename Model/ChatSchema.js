@@ -22,6 +22,12 @@ const messageSchema = new mongoose.Schema({
 });
 
 const chatSchema = new mongoose.Schema({
+  userName: {
+    type: String
+  },
+  roomId: {
+    type: String,
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -32,6 +38,7 @@ const chatSchema = new mongoose.Schema({
     ref: 'Astrologer',
     required: true
   },
+
   messages: [messageSchema],
   createdAt: {
     type: Date,
