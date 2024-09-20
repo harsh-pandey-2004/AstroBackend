@@ -3,7 +3,7 @@ const ChatSchema = require('../../Model/ChatSchema');
 
 const createChat = async (req, res) => {
     const { userName, roomId, userId, astrologerId, message } = req.body;
-    console.log(userName, roomId, userId, astrologerId, message);
+    // console.log(userName, roomId, userId, astrologerId, message);
 
     // Validate request body
     if (!userId || !astrologerId || !roomId) {
@@ -61,7 +61,7 @@ const getAllChats = async (req, res) => {
 const getAstroChats = async (req, res) => {
     try {
         const { astrologerId } = req.body;
-        console.log(astrologerId);
+        // console.log(astrologerId);
         const AstroChats = await ChatSchema.find({ astrologerId: astrologerId });
         if (!AstroChats) {
             return res.status(404).json({ message: 'Chat not found' });
@@ -75,7 +75,7 @@ const getAstroChats = async (req, res) => {
 const getAstroChatBasisOfRoomId = async (req, res) => {
     try {
         const { roomId } = req.body;
-        console.log(roomId);
+        // console.log(roomId);
         const AstroChats = await ChatSchema.find({ roomId: roomId });
         if (!AstroChats) {
             return res.status(404).json({ message: 'Chat not found' });
