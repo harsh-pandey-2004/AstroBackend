@@ -3,7 +3,7 @@ const ChatSchema=require('../../Model/ChatSchema');
 const newMessageRequest=async (req,res)=>{
     try {
         const { astrologerId, message, userId, userName,status} = req.body;
-        console.log(userName, userId, astrologerId, message,status)
+        // console.log(userName, userId, astrologerId, message,status)
         const allowedStatuses = ['pending', 'accepted', 'declined'];
         if (status && !allowedStatuses.includes(status)) {
             return res.status(400).json({
