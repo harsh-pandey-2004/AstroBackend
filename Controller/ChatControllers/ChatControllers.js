@@ -75,7 +75,7 @@ const getAstroChats = async (req, res) => {
 const getAstroChatBasisOfRoomId = async (req, res) => {
     try {
         const { roomId } = req.body;
-        console.log(astrologerId);
+        console.log(roomId);
         const AstroChats = await ChatSchema.find({ roomId: roomId });
         if (!AstroChats) {
             return res.status(404).json({ message: 'Chat not found' });

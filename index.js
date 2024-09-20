@@ -312,9 +312,11 @@ const panditRoutes = require("./Routes/Pandit_Routes");
 const AstroCoucellor = require("./Routes/AstroloCouncellorController");
 const VastuRoutes = require("./Routes/VastuRoutes");
 const VastuBookRoutes = require("./Routes/VastuBookRoute");
-const MessageRequest = require("./Model/MessageRequest");;
+const MessageRequest = require("./Model/MessageRequest");
 const astroThingsRoutes = require("./Routes/AstroItemsRoutes");
 const TempleDetails = require("./Routes/TempleRoutes");
+const MessageRoutes=require('./Routes/MessageRequestRoutes/MessageRequestRoutes');
+const ChatRoutes=require('./Routes/ChatRoutes/ChatRoutes');
 server.use("/api", userRoutes);
 server.use("/api", AstroCoucellor);
 server.use("/api", poojaDetailsRoutes);
@@ -324,6 +326,8 @@ server.use("/api", VastuRoutes);
 server.use("/api", VastuBookRoutes);
 server.use("/api", astroThingsRoutes);
 server.use('/api',TempleDetails)
+server.use('/api',MessageRoutes);
+server.use('/api',ChatRoutes);
 
 httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

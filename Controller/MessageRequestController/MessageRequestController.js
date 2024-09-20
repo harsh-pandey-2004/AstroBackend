@@ -112,4 +112,13 @@ const getMessageRequestOnTheBasisOfStatus=async (req,res)=>{
     }
 }
 
+// const getMessageRequestOnTheBasisOfAcceptedStatus=async (req,res)=>{
+//     try {
+//         const Chats=await MessageRequest.find({status:'accepted'});
+//         res.status(200).json(Chats);
+//     } catch (error) {
+//         res.status(500).json({message:'Internal Server error'});
+//     }
+// }
+
 module.exports={getAllMessageRequests,getMessageRequestOnTheBasisOfStatus,newMessageRequest,statusUpdate};
