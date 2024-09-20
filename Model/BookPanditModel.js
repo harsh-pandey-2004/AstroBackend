@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const BookPanditModel = new mongoose.Schema({
+  userName:{
+    type:String,
+    required:true,
+  },
   poojaName: {
     type: String,
     required: true,
@@ -13,9 +17,13 @@ const BookPanditModel = new mongoose.Schema({
     type: String,
     required: true,
   },
+  address:{
+    type:String,
+    required:true,
+  },
   Time: {
     type: String,
-    required: true,
+    
   },
   PanditId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -27,14 +35,29 @@ const BookPanditModel = new mongoose.Schema({
     ref: "UserBookingId",
     required: true,
   },
-  MaterialRequired: {
-    type: Boolean,
-    required: true,
+  pinCode:{
+    type:String,
+    required:true,
   },
-  TotalPrice: {
+ Package: {
     type: String,
     required: true,
   },
+  Price: {
+    type: String,
+    required: true,
+  },
+  Rashi:{
+    type:String,
+  },
+  Gotra:{
+    type:String,
+  },
+  Nakshatra:{
+    type:String,
+  }
+
+
 });
 
 module.exports = mongoose.model("BookPandit", BookPanditModel);

@@ -1,4 +1,6 @@
 const panditController = require("../Controller/PanditController");
+const {BookPanditwithPooja}=require("../Controller/PanditController");
+
 const express = require("express");
 const router = express.Router();
 const path=require('path');
@@ -62,4 +64,5 @@ router.post(
 router.patch("/update-pandit-profile/:slug", panditController.updatePandit);
 router.get("/panditdata/:slug", panditController.getPanditById);
 router.post("/panditprofile",panditController.getPanditByPincodeAndDate);
+router.post("/bookpandit",BookPanditwithPooja);
 module.exports = router;
