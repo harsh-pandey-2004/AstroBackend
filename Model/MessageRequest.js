@@ -1,30 +1,36 @@
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 
-const MessageReuestSchema=new mongoose.Schema({
-      userId:{
-            type:mongoose.Schema.ObjectId,
-            ref:'User',
-            required:true
+const MessageReuestSchema = new mongoose.Schema({
+      userName: {
+            type: String
       },
-      astrologerId:{
-            type:mongoose.Schema.ObjectId,
-            ref:'Astrologer',
-            required:true
+      userId: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User',
+            required: true
+      },
+      astrologerId: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Astrologer',
+            required: true
       },
       message: {
             type: String,
             required: true
-          },
-          status: {
+      },
+      status: {
             type: String,
             enum: ['pending', 'accepted', 'declined'],
             default: 'pending'
-          },
-          createdAt: {
+      },
+      createdAt: {
             type: Date,
             default: Date.now
-          }
-      
+      },
+      roomId: {
+            type: String,
+      }
+
 })
 const MessageRequest = mongoose.model('MessageRequest', MessageReuestSchema);
- module.exports = MessageRequest;
+module.exports = MessageRequest;
