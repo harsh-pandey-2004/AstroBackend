@@ -2,6 +2,8 @@ const bcrypt = require("bcryptjs");
 const Pandit = require("../Model/panditModel");
 const BookingPandit = require("../Model/BookPanditModel");
 const { validationResult } = require("express-validator");
+const User=require("../Model/userModel");
+
 
 
 
@@ -192,27 +194,35 @@ const updatePandit = async (req, res) => {
   }
 };
 const BookPanditwithPooja = async (req, res) => {
-  const UserId = req.params.id;
-
+ 
   try {
     const {
+      userName,
       poojaName,
       panditName,
       Day,
-      Time,
+      address,
       PanditId,
-      MaterialRequired,
-      TotalPrice,
+      userId,
+      pinCode,
+      Package,
+      Price,
+      Rashi,
+      Gotra,
+      Nakshatra,
     } = req.body;
-
+    console.log(userId,"212")
     // Validate required fields
-    if (
+    if (!userName ||
       !poojaName ||
       !panditName ||
+      !address ||
       !Day ||
-      !Time ||
       !PanditId ||
-      !TotalPrice
+      !userId ||
+      !pinCode ||
+      !Package ||
+      !Price 
     ) {
       return res.status(400).json({
         success: false,
@@ -223,8 +233,7 @@ const BookPanditwithPooja = async (req, res) => {
     // Check if booking already exists
     const isExistPooja = await BookingPandit.findOne({
       Day,
-      Time,
-      userId: UserId,
+      userId,
       PanditId,
     });
     if (isExistPooja) {
@@ -236,16 +245,21 @@ const BookPanditwithPooja = async (req, res) => {
 
     // Create a new booking
     const bookingData = new BookingPandit({
+      userName,
       poojaName,
       panditName,
       Day,
-      Time,
+      address,
       PanditId,
-      MaterialRequired,
-      TotalPrice,
-      userId: UserId,
+      pinCode,
+      Package,
+      Price,
+      Rashi,
+      Gotra,
+      Nakshatra,
+      userId,
     });
-
+    
     const savedBooking = await bookingData.save();
 
     // Update the Pandit document
@@ -256,7 +270,7 @@ const BookPanditwithPooja = async (req, res) => {
           bookings: {
             bookingId: savedBooking._id,
             date: Day,
-            time: Time,
+           
           },
         },
       },
@@ -268,19 +282,19 @@ const BookPanditwithPooja = async (req, res) => {
     }
 
     const updatedUser = await User.findByIdAndUpdate(
-      UserId,
+      userId,
       {
         $push: {
           bookings: {
             bookingId: savedBooking._id,
             date: Day,
-            time: Time,
+            
           },
         },
       },
       { new: true, useFindAndModify: false }
     );
-
+    console.log(userId)
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -364,6 +378,13 @@ const getPanditByPincodeAndDate = async (req,res)=>{
     res.status(500).json({ message: 'Server error' });
   }
 }
+
+
+
+
+
+
+
 
 module.exports = {
   loginpandit,
