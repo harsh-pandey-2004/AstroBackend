@@ -65,4 +65,5 @@ router.patch("/update-pandit-profile/:slug", panditController.updatePandit);
 router.get("/panditdata/:slug", panditController.getPanditById);
 router.post("/panditprofile",panditController.getPanditByPincodeAndDate);
 router.post("/bookpandit",BookPanditwithPooja);
+router.get('/getAllPandits',panditController.getAllPandits);
 module.exports = router;

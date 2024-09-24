@@ -379,7 +379,18 @@ const getPanditByPincodeAndDate = async (req,res)=>{
   }
 }
 
-
+const getAllPandits=async(req,res)=>{
+  try {
+      const PanditData= await Pandit.find({});
+      return res.status(200).json({
+          PanditData:PanditData
+      })
+  } catch (error) {
+      return res.status(500).json({
+          message:"Error in fetching data",error
+      })
+  }
+}
 
 
 
@@ -394,5 +405,6 @@ module.exports = {
   BookPanditwithPooja,
   getPanditById,
   updatePandit,
-  getPanditByPincodeAndDate
+  getPanditByPincodeAndDate,
+  getAllPandits
 };
