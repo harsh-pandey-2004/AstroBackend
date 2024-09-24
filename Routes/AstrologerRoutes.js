@@ -3,7 +3,7 @@ const router = express.Router();
 const path = require("path");
 const multer = require("multer");
 
-// Configure Multer storage and file filtering
+//Configure Multer storage and file filtering
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // Check if the file is either jpeg or png
@@ -19,6 +19,8 @@ const storage = multer.diskStorage({
     cb(null, name);
   },
 });
+
+
 
 const fileFilter = (req, file, cb) => {
   if (
@@ -37,6 +39,25 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
 });
+
+
+
+
+
+// Set storage engine
+// const storage = multer.diskStorage({
+//   destination: './uploads/astrologer-pics', // Adjust the path as needed
+//   filename: (req, file, cb) => {
+//     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+//   },
+// });
+
+// // Init upload
+// const upload = multer({ storage });
+
+// In your route, use upload.single('image') for handling single file uploads
+// app.patch('/api/update-astrologer-profile/:slug', upload.single('image'), updateAstrologer);
+
 
 const AstrologerController = require("../Controller/AstrologerController");
 // const { registerValidator, loginValidation } = require("../helper/Validation.js");

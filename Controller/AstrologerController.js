@@ -161,8 +161,12 @@ const AstrologerLogin = async (req, res) => {
 };
 const updateAstrologer = async (req, res) => {
     try {
+      console.log("hi")
+      console.log(req.body)
       const {slug} = req.params; 
+      console.log(slug);
       const updates = req.body;
+      console.log(updates);
       if (req.file) {
         updates.image = `/astrologer-pics/${req.file.filename}`;
       }

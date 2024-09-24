@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 
+
+
+
+
 const AstroSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -62,6 +66,12 @@ const AstroSchema = new mongoose.Schema({
   chatPrice: {
     type: String,
   },
+  bank: {
+    account: { type: String, required: true },
+    upi: { type: String, required: true },
+    holder: { type: String, required: true }
+  },
 });
 
 module.exports = mongoose.model("Astrologer", AstroSchema);
+
