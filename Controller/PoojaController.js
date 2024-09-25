@@ -56,6 +56,7 @@ const PoojadetailsList = async (req, res) => {
   }
 };
 const book_pooja_details = async (req, res) => {
+  console.log("trigger")
   try {
     const user = req.params.id;
     const existingUser = await User.findById(user);

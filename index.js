@@ -1,23 +1,23 @@
 const express = require("express");
 require("dotenv").config();
 const mongoose = require("mongoose");
-const axios = require("axios"); 
+const axios = require("axios");
 const cors = require("cors");
 const path = require("path");
 const server = express();
 const PORT = 3000;
 const apiKey = "AIzaSyBvnHKYalPScRMFLmx-vUsfdLwkRxAyjyw"; // Use environment variable for API key
-const http=require ('http');
-const socketIo=require('socket.io');
-const Chat=require('./Model/ChatSchema')
+const http = require('http');
+const socketIo = require('socket.io');
+const Chat = require('./Model/ChatSchema')
 
 
-const httpServer=http.createServer(server);
+const httpServer = http.createServer(server);
 
-const io=socketIo(httpServer,{
-  cors:{
-    origin:"*",
-    methods:["GET","POST"],
+const io = socketIo(httpServer, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
   }
 });
 
@@ -82,12 +82,12 @@ server.get("/places", async (req, res) => {
 
 // Socket code
 const usp = io.of('/user-namespace');
-usp.on('connection',(socket)=>{
+usp.on('connection', (socket) => {
   console.log('A client connected:', socket.id);
-  
-  socket.on('join',(data)=>{
-    if(data.type=='astrologer'){
-      astrologers[data.astrologerId]=socket.id;
+
+  socket.on('join', (data) => {
+    if (data.type == 'astrologer') {
+      astrologers[data.astrologerId] = socket.id;
       console.log(`Astrologer connected: ${data.astrologerId}, Socket ID: ${socket.id}`);
     }
     else {
@@ -95,36 +95,37 @@ usp.on('connection',(socket)=>{
     }
   })
 
-  socket.on('userMessage',async(data)=>{
-    console.log(data,"94");
-    const astrologerSocketId=astrologers[data.astrologerId];
-    console.log("95",astrologerSocketId)
+  socket.on('userMessage', async (data) => {
+    console.log(data, "94");
+    const astrologerSocketId = astrologers[data.astrologerId];
+    console.log("95", astrologerSocketId)
     try {
       const messageRequest = new MessageRequest({
-        userId:data.userId,
-        astrologerId:data.astrologerId,
-        message:data.message,
+        userId: data.userId,
+        astrologerId: data.astrologerId,
+        message: data.message,
       });
-  
+
       await messageRequest.save();
     } catch (error) {
       console.error('Error accepting chat request:', error);
     }
-    if(astrologerSocketId){
+    if (astrologerSocketId) {
       // pendingRequests[socket.id]=data;
-      pendingRequests[data.userId]={...data,
-        socketId:socket.id
+      pendingRequests[data.userId] = {
+        ...data,
+        socketId: socket.id
       }
       console.log(`User ${socket.id} sent a message request: "${data.message}" to Astrologer ${data.astrologerId}`);
-      usp.to(astrologerSocketId).emit('chatRequest',{
-        userId:data.userId,
-        socketId:socket.id,
-        message:data.message,
-        userName:data.userName,
+      usp.to(astrologerSocketId).emit('chatRequest', {
+        userId: data.userId,
+        socketId: socket.id,
+        message: data.message,
+        userName: data.userName,
       })
     }
-    else{
-      socket.emit('error','Astrologer not available')
+    else {
+      socket.emit('error', 'Astrologer not available')
     }
   })
 
@@ -139,29 +140,29 @@ usp.on('connection',(socket)=>{
   //       astrologerId:userId.astrologerId,
   //       messages: []
   //     });
-  
+
   //     await chat.save();
   //     } catch (error) {
   //     console.error('Error saving message request:', error);
   //   }
-  
+
   //     // Update the message request status
   //     await MessageRequest.updateOne({ userId, astrologerId:userId.astrologerId }, { status: 'accepted' });
-  
+
   //   if (pendingRequests[userID] && pendingRequests[userID].socketId) {
   //     const userSocketId = pendingRequests[userID].socketId;
-      
+
   //     // Ensure usp.sockets has been initialized properly
   //     if (usp.sockets && usp.sockets.get) {
   //       const userSocket = usp.sockets.get(userSocketId);
-        
+
   //       if (userSocket) {
   //         // Add both the user and astrologer to the room
   //         socket.join(privateroom_of_Id);
   //         usp.to(userSocketId).emit('chatAccepted');
   //         usp.to(userSocketId).emit('message', { from: 'Astrologer', message: 'Chat Accepted' });
   //         userSocket.join(privateroom_of_Id);
-    
+
   //         // Room created and user added successfully
   //         console.log(`User and Astrologer joined room: ${privateroom_of_Id}`);
   //         delete pendingRequests[userID].socketId;
@@ -181,7 +182,7 @@ usp.on('connection',(socket)=>{
   socket.on('acceptChat', async (userId) => {
     const privateroom_of_Id = `${userId.userId}-${userId.astrologerId}`;
     const userID = userId.userId;
-  
+
     try {
       // Create a new chat when astrologer accepts the request
       const chat = new Chat({
@@ -189,33 +190,33 @@ usp.on('connection',(socket)=>{
         astrologerId: userId.astrologerId,
         messages: []
       });
-  
+
       await chat.save();
-  
+
       // Update the message request status
       await MessageRequest.updateOne(
         { userId: userId.userId, astrologerId: userId.astrologerId },
         { status: 'accepted' }
       );
-  
+
       if (pendingRequests[userID] && pendingRequests[userID].socketId) {
         const userSocketId = pendingRequests[userID].socketId;
-  
+
         if (usp.sockets && usp.sockets.get) {
           const userSocket = usp.sockets.get(userSocketId);
-  
+
           if (userSocket) {
             // Join the user and astrologer into the room
             socket.join(privateroom_of_Id);
             userSocket.join(privateroom_of_Id);
-  
+
             // Notify the user that the chat has been accepted
             usp.to(userSocketId).emit('chatAccepted');
             usp.to(userSocketId).emit('message', {
               from: 'Astrologer',
               message: 'Chat Accepted'
             });
-  
+
             // Log the room creation
             console.log(`User and Astrologer joined room: ${privateroom_of_Id}`);
             delete pendingRequests[userID].socketId;
@@ -235,11 +236,11 @@ usp.on('connection',(socket)=>{
       socket.emit('error', 'Chat acceptance failed.');
     }
   });
-  
-  
+
+
 
   //astrologer decline request
-  socket.on('declineChat',(userId)=>{
+  socket.on('declineChat', (userId) => {
     if (pendingRequests[userId]) {
       io.to(userId).emit('chatDeclined');
       console.log(`Astrologer ${socket.id} declined the chat request from User ${userId}`);
@@ -247,16 +248,16 @@ usp.on('connection',(socket)=>{
     }
   })
 
-  
-  socket.on('sendMessage', async(data) => {
+
+  socket.on('sendMessage', async (data) => {
     console.log(data, "147");
-  
-    const { from, message, to,roomId } = data;
+
+    const { from, message, to, roomId } = data;
     try {
       const newMessage = {
-        from, 
-        to, 
-        message, 
+        from,
+        to,
+        message,
         timestamp: new Date()
       };
       const chat = await Chat.findOneAndUpdate(
@@ -265,35 +266,35 @@ usp.on('connection',(socket)=>{
         { new: true, upsert: true } // Creates new chat if it doesn't exist
       );
       // const chat = await Chat.findOne({ userId: from, astrologerId: to }) || await Chat.findOne({ userId: to, astrologerId: from });
-  
+
       if (!chat) {
         console.error('Chat not found');
         return;
       }
-  
+
       chat.messages.push({ from, to, message });
       await chat.save();
     }
-      catch (error) {
-        console.error('Error saving message:', error);
-      }
-  
+    catch (error) {
+      console.error('Error saving message:', error);
+    }
+
     if (roomId) {
       console.log(`Sending message to room: ${roomId}`);
-  
-      
+
+
       usp.to(roomId).emit('message', {
-        from,      
-        message,   
+        from,
+        message,
       });
-  
+
       console.log(`${from} sent a message: "${message}" to room ${roomId}`);
     } else {
       socket.emit('error', 'Invalid room.');
       console.log("Invalid room");
     }
   });
-  
+
 
 
   socket.on('disconnect', () => {
@@ -301,7 +302,7 @@ usp.on('connection',(socket)=>{
     delete astrologers[socket.id];
     delete pendingRequests[socket.id];
     delete activeChats[socket.id];
-});
+  });
 })
 
 // Import routes
@@ -315,19 +316,21 @@ const VastuBookRoutes = require("./Routes/VastuBookRoute");
 const MessageRequest = require("./Model/MessageRequest");
 const astroThingsRoutes = require("./Routes/AstroItemsRoutes");
 const TempleDetails = require("./Routes/TempleRoutes");
-const MessageRoutes=require('./Routes/MessageRequestRoutes/MessageRequestRoutes');
-const ChatRoutes=require('./Routes/ChatRoutes/ChatRoutes');
+const MessageRoutes = require('./Routes/MessageRequestRoutes/MessageRequestRoutes');
+const ChatRoutes = require('./Routes/ChatRoutes/ChatRoutes');
+const poojaRoutes = require('./Routes/Pooja_Routes');
 server.use("/api", userRoutes);
 server.use("/api", AstroCoucellor);
 server.use("/api", poojaDetailsRoutes);
+server.use("/api", poojaRoutes);
 server.use("/api", AstrologerRoutes);
 server.use("/api", panditRoutes);
 server.use("/api", VastuRoutes);
 server.use("/api", VastuBookRoutes);
 server.use("/api", astroThingsRoutes);
-server.use('/api',TempleDetails)
-server.use('/api',MessageRoutes);
-server.use('/api',ChatRoutes);
+server.use('/api', TempleDetails)
+server.use('/api', MessageRoutes);
+server.use('/api', ChatRoutes);
 
 httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
