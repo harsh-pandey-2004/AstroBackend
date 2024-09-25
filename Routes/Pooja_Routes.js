@@ -42,7 +42,6 @@ const poojaController = require("../Controller/PoojaController");
 //   "/add-photos/:poojaId",
 //   upload.array("Pooja_images", 2),
 //   poojaController.addPhotos
-// );
 router.post("/book-pooja/user-deatils/:id", poojaController.book_pooja_details);
 // Route to delete a photo from an existing Pooja
 // router.delete(
