@@ -71,6 +71,10 @@ const AstroSchema = new mongoose.Schema({
     upi: { type: String, required: true },
     holder: { type: String, required: true }
   },
+  status:{
+    type:Boolean,
+
+  }
 });
 
 module.exports = mongoose.model("Astrologer", AstroSchema);
