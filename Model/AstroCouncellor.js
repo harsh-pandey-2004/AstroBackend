@@ -63,9 +63,9 @@ const AstroloCoucellor = new mongoose.Schema({
     type: String,
   },
   bank: {
-    account: { type: String, required: true },
-    upi: { type: String, required: true },
-    holder: { type: String, required: true }
+    account: { type: String, },
+    upi: { type: String, },
+    holder: { type: String,  }
   },
   status:{
     type:Boolean,
