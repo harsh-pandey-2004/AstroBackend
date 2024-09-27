@@ -62,6 +62,14 @@ const AstroloCoucellor = new mongoose.Schema({
   chatPrice: {
     type: String,
   },
+  bank: {
+    account: { type: String, required: true },
+    upi: { type: String, required: true },
+    holder: { type: String, required: true }
+  },
+  status:{
+    type:Boolean,
+  }
 });
 
 module.exports = mongoose.model("AstroloCoucellor", AstroloCoucellor);
