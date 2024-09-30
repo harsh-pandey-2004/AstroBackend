@@ -316,7 +316,10 @@ const getPanditById = async (req, res) => {
     const {slug} = req.params;
     // console.log(id);
 
-    const pandit = await Pandit.findOne({slug});
+    const pandit = await Pandit.findOne({slug}).populate({
+      path: 'bookings.bookingId', // specify the path to populate
+      model: 'BookPandit',        // reference the correct model
+    });
 
     if (!pandit) {
       return res.status(404).json({
@@ -324,6 +327,8 @@ const getPanditById = async (req, res) => {
         msg: "Pandit not found",
       });
     }
+
+    
 
     return res.status(200).json({
       success: true,

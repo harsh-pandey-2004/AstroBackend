@@ -27,7 +27,7 @@ const BookPanditModel = new mongoose.Schema({
   },
   PanditId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "PanditBookedId",
+    ref: "Pandit",
     required: true,
   },
   userId: {

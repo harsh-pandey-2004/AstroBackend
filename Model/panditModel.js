@@ -69,7 +69,7 @@ const PanditSchema = new mongoose.Schema({
     {
       bookingId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Bookings",
+        ref: "BookPandit",
       },
       date: {
         type: [String],
