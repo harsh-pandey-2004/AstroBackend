@@ -4,6 +4,6 @@ const poojaController = require("../Controller/PoojaController");
 
 router.post("/PoojaDetails", poojaController.PoojadetailsList);
 router.get("/PoojaDetails/:id", poojaController.poojaDetails);
-
+router.get("/PoojaDetailsByName",poojaController.poojaDetailsByName);
 router.get("/panditpooja/:id");
 module.exports = router;

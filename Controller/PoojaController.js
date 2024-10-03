@@ -18,6 +18,32 @@ const poojaDetails = async (req, res) => {
     });
   }
 };
+
+//Pooja Details By PoojaName
+const poojaDetailsByName=async(req,res)=>{
+  try{
+    const {PujaName}=req.query;
+    console.log(PujaName);
+    const data=await PoojaDetails.findOne({poojaName: PujaName});
+    
+    return res.status(200).json({
+      success:"true",
+      data:data,
+      message:"Pooja Details Found",
+      
+    })
+
+  }catch(err){
+    console.log(err);
+    res.status(400).json({
+      success:"false",
+      messsage:err.message,
+
+    })
+  }
+
+};
+
 const PoojadetailsList = async (req, res) => {
   try {
     const {
@@ -87,4 +113,5 @@ module.exports = {
   poojaDetails,
   PoojadetailsList,
   book_pooja_details,
+  poojaDetailsByName,
 };
