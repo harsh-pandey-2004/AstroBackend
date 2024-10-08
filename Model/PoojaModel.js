@@ -9,6 +9,16 @@ const bookPoojaSchema = new mongoose.Schema({
     type: String,
     required: true 
   },
+
+  Temple:{
+    type:String,
+    required:true,
+  },
+
+  Pooja:{
+    type:String,
+    required:true,
+  },
   Gotra: {
     type: String,
     required: true
@@ -29,6 +39,7 @@ const bookPoojaSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  //date-of-pooja
   date: {
     type: String
   },
