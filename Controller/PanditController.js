@@ -367,7 +367,6 @@ const getpanditBypooja = async (req, res) => {
 const getPanditByPincodeAndDate = async (req,res)=>{
   try {
     const {pincode,availability}=req.body;
-    console.log(pincode,availability);
     if (!pincode || !availability) {
       return res.status(400).json({ message: 'Pincode and date are required' });
     }
