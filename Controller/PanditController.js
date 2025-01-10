@@ -373,7 +373,7 @@ const getPanditByPincodeAndDate = async (req,res)=>{
     }
     const pandits = await Pandit.find({
       pincode,
-      availability: { $elemMatch: { $eq: availability } }
+      "availability.date": { $in:  [availability]  }
     });
     if (pandits.length === 0) {
       return res.status(404).json({ message: 'No pandits found' });
